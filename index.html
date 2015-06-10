@@ -2,10 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>heavy</title>
+    <title>Heavy Example - Loading Samples</title>
 
     <!-- Generated javascript library includes -->
-    <script type="application/javascript" src="./heavyLib.min.js"></script>
+    <script type="application/javascript" src="./js/samplePlayerLib.min.js"></script>
     <style>
     .cell {
       display: table-cell;
@@ -22,7 +22,7 @@
       var isPlaying = false;
       var webAudioContext = null;
       var webAudioProcessor = null;
-      var heavy = null;
+      var samplePlayer = null;
 
       window.onload = function(e) {
 
@@ -30,7 +30,7 @@
 
         blockSize = 2048
 
-        heavy = new heavyLib({
+        samplePlayer = new samplePlayerLib({
           sampleRate: webAudioContext.sampleRate,
           blockSize: blockSize,
           printHook: hvPrintHook,
@@ -39,13 +39,13 @@
 
         webAudioProcessor = webAudioContext.createScriptProcessor(
           blockSize,
-          heavy.getNumInputChannels(),
+          samplePlayer.getNumInputChannels(),
           // Note: make sure there is at least one output channel specified so that
           // we can process patches that have no i/o objects (i.e. control only)
-          Math.max(heavy.getNumOutputChannels(), 1)
+          Math.max(samplePlayer.getNumOutputChannels(), 1)
         );
 
-        webAudioProcessor.onaudioprocess = function(e) { heavy.process(e); }
+        webAudioProcessor.onaudioprocess = function(e) { samplePlayer.process(e); }
 
         stop();
 
@@ -77,11 +77,15 @@
         (isPlaying) ? stop() : start();
       };
 
+      function playSample() {
+        samplePlayer.sendFloatToReceiver("play", 0.5);
+      };
+
       // Generated Parameter Update Methods
 
       function updateSlider_distance(value) {
         document.getElementById("display_distance").textContent = Number(value).toFixed(2);
-        heavy.sendFloatToReceiver("distance", value);
+        samplePlayer.sendFloatToReceiver("distance", value);
       };
 
     </script>
@@ -92,19 +96,9 @@
 
       <div>
         <button style="padding: 10px;" type="button" id="transportButton" onclick="toggleTransport(this);"/>
+        <button onclick="playSample();">Play</button>
       </div>
 
-      <div class="table"> <!-- Generated Parameters -->
-
-        <div class="row">
-          <div class="cell">
-            <input id="slider_distance" type="range" min="0" max="1" step="0.01" value="0.5" onchange="updateSlider_distance(value);" oninput="updateSlider_distance(value)">
-          </div>
-          <div class="cell" id="display_distance"></div>
-          <div class="cell"><strong>distance</strong></div>
-        </div>
-
-      </div>
 
       <div>
         <p style="padding: 10px;"><em>powered by </em><a href="https://enzienaudio.com"><strong>Heavy</strong></a></p>

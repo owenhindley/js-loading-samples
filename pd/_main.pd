@@ -1,2 +1,7 @@
 #N canvas 0 22 450 300 10;
 #X obj 51 51 table test 1000;
+#X obj 207 88 r play;
+#X obj 207 110 t b;
+#X obj 207 132 print hello;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
