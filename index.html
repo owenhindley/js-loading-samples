@@ -72,7 +72,12 @@
       };
 
       function stop() {
-        webAudioProcessor.disconnect(webAudioContext.destination);
+        try {
+            webAudioProcessor.disconnect(webAudioContext.destination);
+        } catch(e){
+            console.warn("webAudioProcessor could not disconnect : ", e);
+        }
+        
         document.getElementById("transportButton").textContent = "Play";
         isPlaying = false;
       };
