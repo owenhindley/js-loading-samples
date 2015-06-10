@@ -24,6 +24,8 @@
       var webAudioProcessor = null;
       var samplePlayer = null;
 
+      var sampleBuffer = null;
+
       window.onload = function(e) {
 
         webAudioContext = new (window.AudioContext || window.webkitAudioContext);
@@ -46,6 +48,8 @@
         );
 
         webAudioProcessor.onaudioprocess = function(e) { samplePlayer.process(e); }
+
+        loadAudio("test.mp3");
 
         stop();
 
@@ -87,6 +91,24 @@
         document.getElementById("display_distance").textContent = Number(value).toFixed(2);
         samplePlayer.sendFloatToReceiver("distance", value);
       };
+
+
+      function loadAudio(url) {
+
+        var rq = new XMLHttpRequest();
+        rq.open("GET", url, true);
+        rq.responseType = "arraybuffer";
+        rq.send();
+
+        rq.onload = function() {
+            var audioData = rq.response;
+            webAudioContext.decodeAudioData(audioData, function(buffer){
+                sampleBuffer = buffer;
+                console.log(buffer);
+            });
+        }
+
+      }
 
     </script>
   </head>
